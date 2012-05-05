@@ -1,49 +1,45 @@
-/*
-    This file is part of Ciso.
-
-    Ciso is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Ciso is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Foobar; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-
-    Copyright 2005 BOOSTER
-*/
+//Compressed ISO9660 converter Ver.1.01
+//Copyright (C) 2005 BOOSTER
+//
+//Cisco is free software; you can redistribute it and/or
+//modify it under the terms of the GNU General Public License
+//as published by the Free Software Foundation; either version 2
+//of the License, or (at your option) any later version.
+//
+//Cisco is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//GNU General Public License for more details.
+//
+//You should have received a copy of the GNU General Public License
+//along with Cisco; if not, write to the Free Software
+//Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 
 #ifndef __CISO_H__
 #define __CISO_H__
 /*
-	complessed ISO(9660) header format
+	compressed ISO(9660) header format
 */
 typedef struct ciso_header
 {
-	unsigned char magic[4];			/* +00 : 'C','I','S','O'                 */
-	unsigned long header_size;		/* +04 : header size (==0x18)            */
-	unsigned long long total_bytes;	/* +08 : number of original data size    */
-	unsigned long block_size;		/* +10 : number of compressed block size */
-	unsigned char ver;				/* +14 : version 01                      */
-	unsigned char align;			/* +15 : align of index value            */
-	unsigned char rsv_06[2];		/* +16 : reserved                        */
+	uint8_t magic[4];			/* +00 : 'C','I','S','O'                 */
+	uint32_t header_size;		/* +04 : header size (==0x18)            */
+	uint32_t total_bytes;		/* +08 : number of original data size    */
+	uint32_t block_size;		/* +10 : number of compressed block size */
+	uint8_t ver;				/* +14 : version 01                      */
+	uint8_t align;				/* +15 : align of index value            */
+	uint8_t rsv_06[2];			/* +16 : reserved                        */
 #if 0
 // INDEX BLOCK
-	unsigned int index[0];			/* +18 : block[0] index                  */
-	unsigned int index[1];			/* +1C : block[1] index                  */
+	uint32_t index[0];			/* +18 : block[0] index                  */
+	uint32_t index[1];			/* +1C : block[1] index                  */
              :
              :
-	unsigned int index[last];		/* +?? : block[last]                     */
-	unsigned int index[last+1];		/* +?? : end of last data point          */
+	uint32_t index[last];		/* +?? : block[last]                     */
+	uint32_t index[last+1];		/* +?? : end of last data point          */
 // DATA BLOCK
-	unsigned char data[];			/* +?? : compressed or plain sector data */
+	uint8_t data[];				/* +?? : compressed or plain sector data */
 #endif
 }CISO_H;
 
