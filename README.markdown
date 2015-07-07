@@ -1,28 +1,24 @@
 ciso is a simple commandline utility to compress PSP iso files.
 
-This package is a (currently incomplete) port of a package provided
-by Ubuntu: http://packages.ubuntu.com/natty/ciso
+This package is an OSX port of a package provided by Ubuntu: http://packages.ubuntu.com/search?keywords=ciso
+
+# Installation
+
+Now available via homebrew:
+
+    brew install ciso
+
+To build yourself, it's a very straightforward `make` (and optional `make install`).
 
 # Usage
 
 To decompress a cso file:
 
-  ciso 0 infile.cso outfile.iso
+    ciso 0 infile.cso outfile.iso
 
 To compress an iso file:
 
-  ciso level infile.iso outfile.cso
+    ciso level infile.iso outfile.cso
 
 where level ranges from 1 (fast, poor compression) to 9 (slow, high
 compression).
-
-# WARNING
-
-Do Not Trust Your Data To This
-
-While it appears that iso -> cso -> iso roundtrips are lossless, the
-generated cso is broken and existing csos that I have are not
-recognized by the executable.
-
-Given the compilation warnings I get I am assuming it's buggy due to
-differences between Linux and MacOS libraries.
