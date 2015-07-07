@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <zlib.h>               /* /usr(/local)/include/zlib.h */
 #include <zconf.h>
 
@@ -31,10 +32,10 @@ const char *fname_in,*fname_out;
 FILE *fin,*fout;
 z_stream z;
 
-unsigned int *index_buf = NULL;
-unsigned int *crc_buf = NULL;
-unsigned char *block_buf1 = NULL;
-unsigned char *block_buf2 = NULL;
+uint32_t *index_buf = NULL;
+uint32_t *crc_buf = NULL;
+uint8_t *block_buf1 = NULL;
+uint8_t *block_buf2 = NULL;
 
 /****************************************************************************
 	compress ISO to CSO
@@ -43,9 +44,9 @@ unsigned char *block_buf2 = NULL;
 CISO_H ciso;
 int ciso_total_block;
 
-unsigned long long check_file_size(FILE *fp)
+uint64_t check_file_size(FILE *fp)
 {
-	unsigned long long pos;
+	uint64_t pos;
 
 	if( fseek(fp,0,SEEK_END) < 0)
 		return -1;
@@ -80,9 +81,9 @@ unsigned long long check_file_size(FILE *fp)
 ****************************************************************************/
 int decomp_ciso(void)
 {
-	unsigned long long file_size;
-	unsigned int index , index2;
-	unsigned long long read_pos , read_size;
+	uint64_t file_size;
+	uint32_t index , index2;
+	uint64_t read_pos , read_size;
 	int total_sectors;
 	int index_size;
 	int block;
@@ -117,7 +118,7 @@ int decomp_ciso(void)
 	ciso_total_block = ciso.total_bytes / ciso.block_size;
 
 	/* allocate index block */
-	index_size = (ciso_total_block + 1 ) * sizeof(unsigned long);
+	index_size = (ciso_total_block + 1 ) * sizeof(uint32_t);
 	index_buf  = malloc(index_size);
 	block_buf1 = malloc(ciso.block_size);
 	block_buf2 = malloc(ciso.block_size*2);
@@ -138,7 +139,7 @@ int decomp_ciso(void)
 
 	/* show info */
 	printf("Decompress '%s' to '%s'\n",fname_in,fname_out);
-	printf("Total File Size %ld bytes\n",ciso.total_bytes);
+	printf("Total File Size %lld bytes\n",ciso.total_bytes);
 	printf("block size      %d  bytes\n",ciso.block_size);
 	printf("total blocks    %d  blocks\n",ciso_total_block);
 	printf("index align     %d\n",1<<ciso.align);
@@ -237,8 +238,8 @@ int decomp_ciso(void)
 ****************************************************************************/
 int comp_ciso(int level)
 {
-	unsigned long long file_size;
-	unsigned long long write_pos;
+	uint64_t file_size;
+	uint64_t write_pos;
 	int total_sectors;
 	int index_size;
 	int block;
@@ -250,14 +251,14 @@ int comp_ciso(int level)
 	int align,align_b,align_m;
 
 	file_size = check_file_size(fin);
-	if(file_size<0)
+	if(file_size==(uint64_t)-1LL)
 	{
 		printf("Can't get file size\n");
 		return 1;
 	}
 
 	/* allocate index block */
-	index_size = (ciso_total_block + 1 ) * sizeof(unsigned long);
+	index_size = (ciso_total_block + 1 ) * sizeof(uint32_t);
 	index_buf  = malloc(index_size);
 	crc_buf    = malloc(index_size);
 	block_buf1 = malloc(ciso.block_size);
@@ -279,7 +280,7 @@ int comp_ciso(int level)
 
 	/* show info */
 	printf("Compress '%s' to '%s'\n",fname_in,fname_out);
-	printf("Total File Size %ld bytes\n",ciso.total_bytes);
+	printf("Total File Size %lld bytes\n",ciso.total_bytes);
 	printf("block size      %d  bytes\n",ciso.block_size);
 	printf("index align     %d\n",1<<ciso.align);
 	printf("compress level  %d\n",level);
@@ -306,7 +307,7 @@ int comp_ciso(int level)
 			percent_cnt = percent_period;
 			printf("compress %3d%% avarage rate %3d%%\r"
 				,block / percent_period
-				,block==0 ? 0 : 100*write_pos/(block*0x800));
+				,block==0 ? 0 : (uint32_t)(100*write_pos/(block*0x800)));
 		}
 
 		if (deflateInit2(&z, level , Z_DEFLATED, -15,8,Z_DEFAULT_STRATEGY) != Z_OK)
@@ -401,7 +402,7 @@ int main(int argc, char *argv[])
 	int level;
 	int result;
 
-	fprintf(stderr, "Compressed ISO9660 converter Ver.1.01 by BOOSTER\n");
+	fprintf(stderr, "Compressed ISO9660 converter Ver.1.02 by BOOSTER\n");
 
 	if (argc != 4)
 	{
