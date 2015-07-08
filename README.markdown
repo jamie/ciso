@@ -4,11 +4,8 @@ This package is an OSX port of a package provided by Ubuntu: http://packages.ubu
 
 # Installation
 
-Now available via homebrew:
-
-    brew install ciso
-
-To build yourself, it's a very straightforward `make` (and optional `make install`).
+    make
+    make install # (optional)
 
 # Usage
 
