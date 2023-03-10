@@ -8,13 +8,13 @@ INSTALL = install
 
 all : ciso
 ciso : ciso.o
-	gcc -o ciso ciso.o -lz
+	$(CC) -o ciso ciso.o -lz
 
 ciso.o : ciso.c
-	gcc -o ciso.o -c ciso.c
+	$(CC) -o ciso.o -c ciso.c
 
 install :
 	$(INSTALL) -m 755 ciso $(USRBINDIR)/ciso
 
 clean:
-	rm -rf *.o
+	rm -rf ciso *.o
